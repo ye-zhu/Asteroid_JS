@@ -25,6 +25,12 @@ class Game {
     this.setGameIntoMotion();
   }
 
+  localStorageScore () {
+    if (!localStorage.asteroidHighScore || localStorage.asteroidHighScore < this.score) {
+      localStorage.asteroidHighScore = this.score
+    }
+  }
+
   makeShip () {
     this.ship[0] = new Ship ({
             position: [canvas.width/2, canvas.height/2],
@@ -175,6 +181,7 @@ class Game {
   }
 
   resetGame () {
+    this.localStorageScore();
     this.bullets = [];
     this.allObjects = [];
     this.explosions = [];
@@ -186,7 +193,7 @@ class Game {
     }
     this.score = 0;
     this.ship[0].remakeShip();
-    this.ship[0].shipLives = 1;
+    this.ship[0].shipLives = 6;
     this.ship[0].rotation = 0;
     this.ship[0].direction = [1,0];
   }
@@ -220,13 +227,14 @@ class Game {
 
   animateFrame () {
     this.clear();
+    this.localStorageScore();
     this.makeStartScreenAndGameDesciptions()
-      this.concatAll();
-      this.beforeMoveAll();
-      this.moveAll();
-      this.detectAllCollisions();
-      this.resetFieldAsteroidsAfterRound();
-      this.drawAllImages();
+    this.concatAll();
+    this.beforeMoveAll();
+    this.moveAll();
+    this.detectAllCollisions();
+    this.resetFieldAsteroidsAfterRound();
+    this.drawAllImages();
       // this.drawAll();
 
   }

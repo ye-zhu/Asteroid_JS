@@ -15,13 +15,17 @@ class Description {
 
   drawShipLivesAndScore () {
     let xPos = 870
+    let highScore = ""
     for (let i = 0; i < this.game.ship[0].shipLives; i++) {
       this.game.context.drawImage (
         Images.ship, 0, 0, 96, 156, xPos, 15, 24, 39
       )
       xPos -= 40
     }
-    this.game.context.fillText(`score = ${this.game.score}`, 10, 25);
+    if (localStorage.asteroidHighScore > 0 ) {
+      highScore = `high score = ${localStorage.asteroidHighScore}    `
+    }
+    this.game.context.fillText(`${highScore} score = ${this.game.score}`, 10, 25);
   }
 
   makeEnterScreen () {
@@ -39,6 +43,19 @@ class Description {
       this.game.context.drawImage (
         Images.asteroidintro, 0, 0, 583, 519, 180, 60, 583, 519
       )
+
+      let score = ""
+      let highScore = ""
+
+      if (this.game.score > 0 ) {
+        score = `your score = ${this.game.score}`
+      }
+
+      if (localStorage.asteroidHighScore > 0 ) {
+        highScore = `high score = ${localStorage.asteroidHighScore}   `
+      }
+
+      this.game.context.fillText(`${highScore} ${score}`, 10, 25);
     }
 
     this.enterListener = document.addEventListener('keydown', listenerFn)

@@ -95,6 +95,12 @@
 	    this.setGameIntoMotion();
 	  }
 	
+	  localStorageScore () {
+	    if (!localStorage.asteroidHighScore || localStorage.asteroidHighScore < this.score) {
+	      localStorage.asteroidHighScore = this.score
+	    }
+	  }
+	
 	  makeShip () {
 	    this.ship[0] = new Ship ({
 	            position: [canvas.width/2, canvas.height/2],
@@ -245,6 +251,7 @@
 	  }
 	
 	  resetGame () {
+	    this.localStorageScore();
 	    this.bullets = [];
 	    this.allObjects = [];
 	    this.explosions = [];
@@ -256,7 +263,7 @@
 	    }
 	    this.score = 0;
 	    this.ship[0].remakeShip();
-	    this.ship[0].shipLives = 1;
+	    this.ship[0].shipLives = 6;
 	    this.ship[0].rotation = 0;
 	    this.ship[0].direction = [1,0];
 	  }
@@ -290,13 +297,14 @@
 	
 	  animateFrame () {
 	    this.clear();
+	    this.localStorageScore();
 	    this.makeStartScreenAndGameDesciptions()
-	      this.concatAll();
-	      this.beforeMoveAll();
-	      this.moveAll();
-	      this.detectAllCollisions();
-	      this.resetFieldAsteroidsAfterRound();
-	      this.drawAllImages();
+	    this.concatAll();
+	    this.beforeMoveAll();
+	    this.moveAll();
+	    this.detectAllCollisions();
+	    this.resetFieldAsteroidsAfterRound();
+	    this.drawAllImages();
 	      // this.drawAll();
 	
 	  }
@@ -893,13 +901,17 @@
 	
 	  drawShipLivesAndScore () {
 	    let xPos = 870
+	    let highScore = ""
 	    for (let i = 0; i < this.game.ship[0].shipLives; i++) {
 	      this.game.context.drawImage (
 	        Images.ship, 0, 0, 96, 156, xPos, 15, 24, 39
 	      )
 	      xPos -= 40
 	    }
-	    this.game.context.fillText(`score = ${this.game.score}`, 10, 25);
+	    if (localStorage.asteroidHighScore > 0 ) {
+	      highScore = `high score = ${localStorage.asteroidHighScore}    `
+	    }
+	    this.game.context.fillText(`${highScore} score = ${this.game.score}`, 10, 25);
 	  }
 	
 	  makeEnterScreen () {
@@ -917,6 +929,19 @@
 	      this.game.context.drawImage (
 	        Images.asteroidintro, 0, 0, 583, 519, 180, 60, 583, 519
 	      )
+	
+	      let score = ""
+	      let highScore = ""
+	
+	      if (this.game.score > 0 ) {
+	        score = `your score = ${this.game.score}`
+	      }
+	
+	      if (localStorage.asteroidHighScore > 0 ) {
+	        highScore = `high score = ${localStorage.asteroidHighScore}   `
+	      }
+	
+	      this.game.context.fillText(`${highScore} ${score}`, 10, 25);
 	    }
 	
 	    this.enterListener = document.addEventListener('keydown', listenerFn)
